@@ -1,0 +1,45 @@
+///////////////////////////////////////////////////////////////////////////////////////
+//
+// etf-sui-integration-test-resources
+//
+///////////////////////////////////////////////////////////////////////////////////////
+buildscript {
+    repositories {
+        maven {
+            url "http://services.interactive-instruments.de/etfdev-af/plugins-releases-local"
+            credentials {
+                username 'ii-bda'
+                password '6ozhS683'
+            }}
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        jcenter()
+    }
+    dependencies {
+        classpath group: 'de.interactive_instruments.bda', name: 'etf-bda', version:'1.0.+'
+        classpath 'net.researchgate:gradle-release:2.3.4'
+        classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.12.1"
+    }
+    dependencies {
+        ant.unjar src: configurations.classpath.files.find {it.path.contains('etf')}, dest: 'build/gradle'
+    }
+}
+apply from: 'build/gradle/ii-bda.gradle'
+///////////////////////////////////////////////////////////////////////////////////////
+
+group = 'de.interactive_instruments.etf.testing'
+description = "ETF SoapUI test runner"
+
+
+apply plugin: 'java'
+apply plugin: 'maven'
+
+
+repositories {
+	mavenLocal()
+}
+
+dependencies {
+    compile group: 'by.stub', name: 'stubby4j', version:'3.3.0'
+}
