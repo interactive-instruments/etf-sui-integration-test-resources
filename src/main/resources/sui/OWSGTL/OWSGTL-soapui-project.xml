@@ -1,0 +1,720 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~  Copyright 2016 interactive instruments GmbH
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  --><con:soapui-project activeEnvironment="etf-sel.modelBridge" name="OWSGTL" resourceRoot="${projectDir}" soapui-version="4.6.4" abortOnError="false" runType="SEQUENTIAL" id="ddbe357a-af22-49ef-a988-934b161f9e24" xmlns:con="http://eviware.com/soapui/config"><con:description>This Testproject is used for testing the OWSGTL.</con:description><con:settings/><con:testSuite name="TestSetup">
+    <con:description>Request and parse the capabilities of the service and configure test cases. Requires the etf-sui-owsgtl test library.</con:description><con:settings>
+      <con:setting id="com.eviware.soapui.impl.wsdl.panels.testcase.JTestRunLog$OptionsForm@errors_only">true</con:setting>
+    </con:settings>
+    <con:runType>SEQUENTIAL</con:runType>
+    
+    <con:properties><con:property><con:name>version</con:name><con:value>2.0.0</con:value></con:property><con:property><con:name>service</con:name><con:value>wfs</con:value></con:property></con:properties>
+    
+  <con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Init TestProject" searchProperties="true"><con:description>Initialize loggers and set credentials.</con:description><con:settings/><con:testStep name="Init TestProject" type="groovy">
+        <con:settings/>
+        <con:config><script>import de.interactive_instruments.xtf.*;
+SOAPUI_I.init(log,context,testRunner);
+
+TestSetup.init();
+</script></con:config>
+      </con:testStep><con:properties><con:property><con:name>qaf.ShortDescription</con:name><con:value/></con:property><con:property><con:name>qaf.Author</con:name><con:value>herrmann</con:value></con:property><con:property><con:name>qaf.CreationDate</con:name><con:value>2014-01-13T12:24:44.115+01:00</con:value></con:property><con:property><con:name>qaf.Version</con:name><con:value>1.0.0</con:value></con:property><con:property><con:name>qaf.AssociatedRequirements</con:name><con:value/></con:property><con:property><con:name>qaf.ExpectedResults</con:name><con:value/></con:property><con:property><con:name>qaf.Status</con:name><con:value>IMPLEMENTED</con:value></con:property><con:property><con:name>qaf.LastUpdateDate</con:name><con:value>2014-01-13T14:10:42.862+01:00</con:value></con:property></con:properties><con:reportParameters/></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Endpoint is available" searchProperties="true" id="d1a73552-7298-42a2-8e76-fdea21824580"><con:description>Check if the service is available.</con:description><con:settings/><con:testStep name="HTTP Request" type="httprequest">
+        <con:settings/>
+        <con:config method="GET" name="HTTP Request" timeout="0" xsi:type="con:HttpRequest" sslKeystore="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:settings>
+            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+          <con:setting id="com.eviware.soapui.impl.support.AbstractHttpRequest@follow-redirects">true</con:setting><con:setting id="com.eviware.soapui.settings.CommonSettings@entitizeProperties">false</con:setting><con:setting id="com.eviware.soapui.impl.support.AbstractHttpRequest@dump-file"/><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@bind_address"/></con:settings>
+          <con:encoding>UTF-8</con:encoding>
+          <con:endpoint>${#Project#serviceEndpoint}</con:endpoint>
+          <con:request/>
+          <con:assertion type="Response SLA Assertion" name="Respond in 10 seconds" id="f4835519-c036-4bdb-a8fa-641c29d2c8ff"><con:configuration><SLA>10000</SLA></con:configuration></con:assertion><con:assertion type="Invalid HTTP Status Codes" name="Invalid HTTP Status Codes" id="c74169b2-9491-4fda-bd58-262b937cd1c3"><con:configuration><codes>403, 404, 500, 503</codes></con:configuration></con:assertion><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+          <con:jmsPropertyConfig/>
+          <con:parameters>
+            
+            
+            
+          </con:parameters>
+        </con:config>
+      </con:testStep><con:properties><con:property><con:name>capabilities</con:name><con:value><![CDATA[<WFS_Capabilities version="2.0.0" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd" xmlns="http://www.opengis.net/wfs/2.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:ogc="http://www.opengis.net/ogc" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <ows:ServiceIdentification>
+      <ows:Title>Download Service for ELF Geographical Names.</ows:Title>
+      <ows:Abstract>Download Service for ELF Geographical Names.</ows:Abstract>
+      <ows:ServiceType codeSpace="http://www.opengeospatial.org/">WFS</ows:ServiceType>
+      <ows:ServiceTypeVersion>2.0.0</ows:ServiceTypeVersion>
+      <ows:ServiceTypeVersion>1.1.0</ows:ServiceTypeVersion>
+   </ows:ServiceIdentification>
+   <ows:ServiceProvider>
+      <ows:ProviderName>Norwegian Mapping Authorty</ows:ProviderName>
+      <ows:ProviderSite xlink:href="http://www.kartverket.no"/>
+      <ows:ServiceContact>
+         <ows:ContactInfo>
+            <ows:Phone>
+               <ows:Voice/>
+               <ows:Facsimile/>
+            </ows:Phone>
+            <ows:Address>
+               <ows:DeliveryPoint>Kartverksveien 21</ows:DeliveryPoint>
+               <ows:City>Hønefoss</ows:City>
+               <ows:AdministrativeArea>Ringrike</ows:AdministrativeArea>
+               <ows:PostalCode>3507</ows:PostalCode>
+               <ows:Country>Norway</ows:Country>
+               <ows:ElectronicMailAddress>wms-drift@kartverket.no</ows:ElectronicMailAddress>
+            </ows:Address>
+            <ows:OnlineResource xlink:href="http://www.kartverket.no"/>
+            <ows:HoursOfService/>
+            <ows:ContactInstructions/>
+         </ows:ContactInfo>
+         <ows:Role>PointOfContact</ows:Role>
+      </ows:ServiceContact>
+   </ows:ServiceProvider>
+   <ows:OperationsMetadata>
+      <ows:Operation name="GetCapabilities">
+         <ows:DCP>
+            <ows:HTTP>
+               <ows:Get xlink:href="http://wfs.geonorge.no/skwms1/wfs.elf-gn?"/>
+               <ows:Post xlink:href="http://wfs.geonorge.no/skwms1/wfs.elf-gn?"/>
+            </ows:HTTP>
+         </ows:DCP>
+         <ows:Parameter name="AcceptVersions">
+            <ows:AllowedValues>
+               <ows:Value>2.0.0</ows:Value>
+               <ows:Value>1.1.0</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+         <ows:Parameter name="AcceptFormats">
+            <ows:AllowedValues>
+               <ows:Value>text/xml</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+         <ows:Parameter name="Sections">
+            <ows:AllowedValues>
+               <ows:Value>ServiceIdentification</ows:Value>
+               <ows:Value>ServiceProvider</ows:Value>
+               <ows:Value>OperationsMetadata</ows:Value>
+               <ows:Value>FeatureTypeList</ows:Value>
+               <ows:Value>Filter_Capabilities</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+      </ows:Operation>
+      <ows:Operation name="DescribeFeatureType">
+         <ows:DCP>
+            <ows:HTTP>
+               <ows:Get xlink:href="http://wfs.geonorge.no/skwms1/wfs.elf-gn?"/>
+               <ows:Post xlink:href="http://wfs.geonorge.no/skwms1/wfs.elf-gn?"/>
+            </ows:HTTP>
+         </ows:DCP>
+      </ows:Operation>
+      <ows:Operation name="ListStoredQueries">
+         <ows:DCP>
+            <ows:HTTP>
+               <ows:Get xlink:href="http://wfs.geonorge.no/skwms1/wfs.elf-gn?"/>
+               <ows:Post xlink:href="http://wfs.geonorge.no/skwms1/wfs.elf-gn?"/>
+            </ows:HTTP>
+         </ows:DCP>
+      </ows:Operation>
+      <ows:Operation name="DescribeStoredQueries">
+         <ows:DCP>
+            <ows:HTTP>
+               <ows:Get xlink:href="http://wfs.geonorge.no/skwms1/wfs.elf-gn?"/>
+               <ows:Post xlink:href="http://wfs.geonorge.no/skwms1/wfs.elf-gn?"/>
+            </ows:HTTP>
+         </ows:DCP>
+      </ows:Operation>
+      <ows:Operation name="GetFeature">
+         <ows:DCP>
+            <ows:HTTP>
+               <ows:Get xlink:href="http://wfs.geonorge.no/skwms1/wfs.elf-gn?"/>
+               <ows:Post xlink:href="http://wfs.geonorge.no/skwms1/wfs.elf-gn?"/>
+            </ows:HTTP>
+         </ows:DCP>
+      </ows:Operation>
+      <ows:Operation name="GetPropertyValue">
+         <ows:DCP>
+            <ows:HTTP>
+               <ows:Get xlink:href="http://wfs.geonorge.no/skwms1/wfs.elf-gn?"/>
+               <ows:Post xlink:href="http://wfs.geonorge.no/skwms1/wfs.elf-gn?"/>
+            </ows:HTTP>
+         </ows:DCP>
+      </ows:Operation>
+      <ows:Parameter name="version">
+         <ows:AllowedValues>
+            <ows:Value>2.0.0</ows:Value>
+            <ows:Value>1.1.0</ows:Value>
+         </ows:AllowedValues>
+      </ows:Parameter>
+      <ows:Parameter name="srsName">
+         <ows:AllowedValues>
+            <ows:Value>urn:ogc:def:crs:EPSG::4258</ows:Value>
+            <ows:Value>urn:ogc:def:crs:EPSG::3035</ows:Value>
+            <ows:Value>urn:ogc:def:crs:EPSG::3044</ows:Value>
+            <ows:Value>urn:ogc:def:crs:EPSG::3045</ows:Value>
+            <ows:Value>urn:ogc:def:crs:EPSG::3046</ows:Value>
+            <ows:Value>urn:ogc:def:crs:EPSG::3047</ows:Value>
+            <ows:Value>urn:ogc:def:crs:EPSG::3048</ows:Value>
+            <ows:Value>urn:ogc:def:crs:EPSG::4326</ows:Value>
+            <ows:Value>urn:ogc:def:crs:EPSG::25829</ows:Value>
+            <ows:Value>urn:ogc:def:crs:EPSG::25830</ows:Value>
+            <ows:Value>urn:ogc:def:crs:EPSG::25831</ows:Value>
+            <ows:Value>urn:ogc:def:crs:EPSG::25832</ows:Value>
+            <ows:Value>urn:ogc:def:crs:EPSG::25833</ows:Value>
+            <ows:Value>urn:ogc:def:crs:EPSG::25834</ows:Value>
+            <ows:Value>urn:ogc:def:crs:EPSG::25835</ows:Value>
+            <ows:Value>urn:ogc:def:crs:EPSG::25836</ows:Value>
+            <ows:Value>urn:ogc:def:crs:EPSG::32632</ows:Value>
+            <ows:Value>urn:ogc:def:crs:EPSG::32633</ows:Value>
+            <ows:Value>urn:ogc:def:crs:EPSG::32634</ows:Value>
+            <ows:Value>urn:ogc:def:crs:EPSG::32635</ows:Value>
+            <ows:Value>urn:ogc:def:crs:EPSG::3857</ows:Value>
+         </ows:AllowedValues>
+      </ows:Parameter>
+      <ows:Parameter name="outputFormat">
+         <ows:AllowedValues>
+            <ows:Value>text/xml; subtype=gml/3.2.1</ows:Value>
+            <ows:Value>application/gml+xml; version=3.2</ows:Value>
+         </ows:AllowedValues>
+      </ows:Parameter>
+      <ows:Parameter name="resolve">
+         <ows:AllowedValues>
+            <ows:Value>none</ows:Value>
+            <ows:Value>local</ows:Value>
+            <ows:Value>remote</ows:Value>
+            <ows:Value>all</ows:Value>
+         </ows:AllowedValues>
+      </ows:Parameter>
+      <ows:Constraint name="ImplementsSimpleWFS">
+         <ows:NoValues/>
+         <ows:DefaultValue>TRUE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="ImplementsBasicWFS">
+         <ows:NoValues/>
+         <ows:DefaultValue>TRUE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="ImplementsTransactionalWFS">
+         <ows:NoValues/>
+         <ows:DefaultValue>FALSE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="ImplementsLockingWFS">
+         <ows:NoValues/>
+         <ows:DefaultValue>FALSE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="KVPEncoding">
+         <ows:NoValues/>
+         <ows:DefaultValue>TRUE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="XMLEncoding">
+         <ows:NoValues/>
+         <ows:DefaultValue>TRUE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="SOAPEncoding">
+         <ows:NoValues/>
+         <ows:DefaultValue>FALSE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="ImplementsInheritance">
+         <ows:NoValues/>
+         <ows:DefaultValue>FALSE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="ImplementsRemoteResolve">
+         <ows:NoValues/>
+         <ows:DefaultValue>FALSE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="ImplementsResultPaging">
+         <ows:NoValues/>
+         <ows:DefaultValue>FALSE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="ImplementsStandardJoins">
+         <ows:NoValues/>
+         <ows:DefaultValue>FALSE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="ImplementsSpatialJoins">
+         <ows:NoValues/>
+         <ows:DefaultValue>FALSE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="ImplementsTemporalJoins">
+         <ows:NoValues/>
+         <ows:DefaultValue>FALSE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="ImplementsFeatureVersioning">
+         <ows:NoValues/>
+         <ows:DefaultValue>FALSE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="ManageStoredQueries">
+         <ows:NoValues/>
+         <ows:DefaultValue>FALSE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="CountDefault">
+         <ows:NoValues/>
+         <ows:DefaultValue>1000000</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="ResolveLocalScope">
+         <ows:NoValues/>
+         <ows:DefaultValue>*</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="QueryExpressions">
+         <ows:AllowedValues>
+            <ows:Value>wfs:Query</ows:Value>
+            <ows:Value>wfs:StoredQuery</ows:Value>
+         </ows:AllowedValues>
+      </ows:Constraint>
+      <ows:ExtendedCapabilities xmlns="http://www.deegree.org/services/metadata" xmlns:xlgn="urn:x-exml:specification:gmlas:ExMLargeGeographicalNames:1.0">
+         <inspire_dls:ExtendedCapabilities xsi:schemaLocation="http://inspire.ec.europa.eu/schemas/common/1.0         http://inspire.ec.europa.eu/schemas/common/1.0/common.xsd         http://inspire.ec.europa.eu/schemas/inspire_dls/1.0         http://inspire.ec.europa.eu/schemas/inspire_dls/1.0/inspire_dls.xsd" xmlns:inspire_dls="http://inspire.ec.europa.eu/schemas/inspire_dls/1.0" xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0">
+            <inspire_common:MetadataUrl>
+               <inspire_common:URL>https://www.geonorge.no/geonetwork/srv/nor/xml_iso19139?uuid=b10c5243-c629-4cd9-b13e-64bb03c981ca</inspire_common:URL>
+               <inspire_common:MediaType>application/vnd.iso.19139+xml</inspire_common:MediaType>
+            </inspire_common:MetadataUrl>
+            <inspire_common:SupportedLanguages>
+               <inspire_common:DefaultLanguage>
+                  <inspire_common:Language>eng</inspire_common:Language>
+               </inspire_common:DefaultLanguage>
+            </inspire_common:SupportedLanguages>
+            <inspire_common:ResponseLanguage>
+               <inspire_common:Language>eng</inspire_common:Language>
+            </inspire_common:ResponseLanguage>
+            <inspire_dls:SpatialDataSetIdentifier metadataURL="https://www.geonorge.no/geonetwork/srv/nor/xml_iso19139?uuid=30caed2f-454e-44be-b5cc-26bb5c0110ca">
+               <inspire_common:Code>30caed2f-454e-44be-b5cc-26bb5c0110ca</inspire_common:Code>
+            </inspire_dls:SpatialDataSetIdentifier>
+         </inspire_dls:ExtendedCapabilities>
+      </ows:ExtendedCapabilities>
+   </ows:OperationsMetadata>
+   <FeatureTypeList>
+      <FeatureType>
+         <Name xmlns:elf-gn="http://www.locationframework.eu/schemas/GeographicalNames/1.0">elf-gn:NamedPlace</Name>
+         <Title>elf-gn:NamedPlace</Title>
+         <DefaultCRS>urn:ogc:def:crs:EPSG::4258</DefaultCRS>
+         <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+         <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+         <OtherCRS>urn:ogc:def:crs:EPSG::3045</OtherCRS>
+         <OtherCRS>urn:ogc:def:crs:EPSG::3046</OtherCRS>
+         <OtherCRS>urn:ogc:def:crs:EPSG::3047</OtherCRS>
+         <OtherCRS>urn:ogc:def:crs:EPSG::3048</OtherCRS>
+         <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+         <OtherCRS>urn:ogc:def:crs:EPSG::25829</OtherCRS>
+         <OtherCRS>urn:ogc:def:crs:EPSG::25830</OtherCRS>
+         <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+         <OtherCRS>urn:ogc:def:crs:EPSG::25832</OtherCRS>
+         <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+         <OtherCRS>urn:ogc:def:crs:EPSG::25834</OtherCRS>
+         <OtherCRS>urn:ogc:def:crs:EPSG::25835</OtherCRS>
+         <OtherCRS>urn:ogc:def:crs:EPSG::25836</OtherCRS>
+         <OtherCRS>urn:ogc:def:crs:EPSG::32632</OtherCRS>
+         <OtherCRS>urn:ogc:def:crs:EPSG::32633</OtherCRS>
+         <OtherCRS>urn:ogc:def:crs:EPSG::32634</OtherCRS>
+         <OtherCRS>urn:ogc:def:crs:EPSG::32635</OtherCRS>
+         <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+         <OutputFormats>
+            <Format>text/xml; subtype=gml/3.2.1</Format>
+            <Format>application/gml+xml; version=3.2</Format>
+         </OutputFormats>
+         <ows:WGS84BoundingBox>
+            <ows:LowerCorner>-43.911558 53.967286</ows:LowerCorner>
+            <ows:UpperCorner>52.478522 80.264681</ows:UpperCorner>
+         </ows:WGS84BoundingBox>
+      </FeatureType>
+   </FeatureTypeList>
+   <fes:Filter_Capabilities>
+      <fes:Conformance>
+         <fes:Constraint name="ImplementsQuery">
+            <ows:NoValues/>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsAdHocQuery">
+            <ows:NoValues/>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsFunctions">
+            <ows:NoValues/>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsResourceId">
+            <ows:NoValues/>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsMinStandardFilter">
+            <ows:NoValues/>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsStandardFilter">
+            <ows:NoValues/>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsMinSpatialFilter">
+            <ows:NoValues/>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsSpatialFilter">
+            <ows:NoValues/>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsMinTemporalFilter">
+            <ows:NoValues/>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsTemporalFilter">
+            <ows:NoValues/>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsVersionNav">
+            <ows:NoValues/>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsSorting">
+            <ows:NoValues/>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsExtendedOperators">
+            <ows:NoValues/>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsMinimumXPath">
+            <ows:NoValues/>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsSchemaElementFunc">
+            <ows:NoValues/>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+         </fes:Constraint>
+      </fes:Conformance>
+      <fes:Id_Capabilities>
+         <fes:ResourceIdentifier name="fes:ResourceId"/>
+      </fes:Id_Capabilities>
+      <fes:Scalar_Capabilities>
+         <fes:LogicalOperators/>
+         <fes:ComparisonOperators>
+            <fes:ComparisonOperator name="PropertyIsEqualTo"/>
+            <fes:ComparisonOperator name="PropertyIsNotEqualTo"/>
+            <fes:ComparisonOperator name="PropertyIsLessThan"/>
+            <fes:ComparisonOperator name="PropertyIsGreaterThan"/>
+            <fes:ComparisonOperator name="PropertyIsLessThanOrEqualTo"/>
+            <fes:ComparisonOperator name="PropertyIsGreaterThanOrEqualTo"/>
+            <fes:ComparisonOperator name="PropertyIsLike"/>
+            <fes:ComparisonOperator name="PropertyIsNull"/>
+            <fes:ComparisonOperator name="PropertyIsNil"/>
+            <fes:ComparisonOperator name="PropertyIsBetween"/>
+         </fes:ComparisonOperators>
+      </fes:Scalar_Capabilities>
+      <fes:Spatial_Capabilities>
+         <fes:GeometryOperands xmlns:gml32="http://www.opengis.net/gml">
+            <fes:GeometryOperand name="gml:Box"/>
+            <fes:GeometryOperand name="gml:Envelope"/>
+            <fes:GeometryOperand name="gml:Point"/>
+            <fes:GeometryOperand name="gml:LineString"/>
+            <fes:GeometryOperand name="gml:Curve"/>
+            <fes:GeometryOperand name="gml:Polygon"/>
+            <fes:GeometryOperand name="gml:Surface"/>
+            <fes:GeometryOperand name="gml:MultiPoint"/>
+            <fes:GeometryOperand name="gml:MultiLineString"/>
+            <fes:GeometryOperand name="gml:MultiCurve"/>
+            <fes:GeometryOperand name="gml:MultiPolygon"/>
+            <fes:GeometryOperand name="gml:MultiSurface"/>
+            <fes:GeometryOperand name="gml:CompositeCurve"/>
+            <fes:GeometryOperand name="gml:CompositeSurface"/>
+            <fes:GeometryOperand name="gml32:Envelope"/>
+            <fes:GeometryOperand name="gml32:Point"/>
+            <fes:GeometryOperand name="gml32:Curve"/>
+            <fes:GeometryOperand name="gml32:Surface"/>
+            <fes:GeometryOperand name="gml32:MultiPoint"/>
+            <fes:GeometryOperand name="gml32:MultiCurve"/>
+            <fes:GeometryOperand name="gml32:MultiSurface"/>
+            <fes:GeometryOperand name="gml32:CompositeCurve"/>
+            <fes:GeometryOperand name="gml32:CompositeSurface"/>
+         </fes:GeometryOperands>
+         <fes:SpatialOperators>
+            <fes:SpatialOperator name="BBOX"/>
+            <fes:SpatialOperator name="Equals"/>
+            <fes:SpatialOperator name="Disjoint"/>
+            <fes:SpatialOperator name="Intersects"/>
+            <fes:SpatialOperator name="Touches"/>
+            <fes:SpatialOperator name="Crosses"/>
+            <fes:SpatialOperator name="Within"/>
+            <fes:SpatialOperator name="Contains"/>
+            <fes:SpatialOperator name="Overlaps"/>
+            <fes:SpatialOperator name="Beyond"/>
+            <fes:SpatialOperator name="DWithin"/>
+         </fes:SpatialOperators>
+      </fes:Spatial_Capabilities>
+      <fes:Functions>
+         <fes:Function name="Area">
+            <fes:Returns xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:double</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="arg1">
+                  <fes:Type>gml:_Geometry</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="Area">
+            <fes:Returns xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:double</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="arg1">
+                  <fes:Type xmlns:gml32="http://www.opengis.net/gml/3.2">gml32:AbstractGeometry</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="Centroid">
+            <fes:Returns>gml:Point</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="arg1">
+                  <fes:Type>gml:_Geometry</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="Centroid">
+            <fes:Returns xmlns:gml32="http://www.opengis.net/gml/3.2">gml32:Point</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="arg1">
+                  <fes:Type xmlns:gml32="http://www.opengis.net/gml/3.2">gml32:AbstractGeometry</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="ExtraProp">
+            <fes:Returns xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:anyType</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="arg1">
+                  <fes:Type xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:string</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="GeometryFromWKT">
+            <fes:Returns>gml:_Geometry</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="arg1">
+                  <fes:Type xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:string</fes:Type>
+               </fes:Argument>
+               <fes:Argument name="arg2">
+                  <fes:Type xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:string</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="GeometryFromWKT">
+            <fes:Returns xmlns:gml32="http://www.opengis.net/gml/3.2">gml32:AbstractGeometry</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="arg1">
+                  <fes:Type xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:string</fes:Type>
+               </fes:Argument>
+               <fes:Argument name="arg2">
+                  <fes:Type xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:string</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="GetCurrentScale">
+            <fes:Returns xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:double</fes:Returns>
+         </fes:Function>
+         <fes:Function name="IDiv">
+            <fes:Returns xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:integer</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="arg1">
+                  <fes:Type xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:integer</fes:Type>
+               </fes:Argument>
+               <fes:Argument name="arg2">
+                  <fes:Type xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:integer</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="IMod">
+            <fes:Returns xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:integer</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="arg1">
+                  <fes:Type xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:integer</fes:Type>
+               </fes:Argument>
+               <fes:Argument name="arg2">
+                  <fes:Type xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:integer</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="InteriorPoint">
+            <fes:Returns>gml:Point</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="arg1">
+                  <fes:Type>gml:_Geometry</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="InteriorPoint">
+            <fes:Returns xmlns:gml32="http://www.opengis.net/gml/3.2">gml32:Point</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="arg1">
+                  <fes:Type xmlns:gml32="http://www.opengis.net/gml/3.2">gml32:AbstractGeometry</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="IsCurve">
+            <fes:Returns xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:boolean</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="arg1">
+                  <fes:Type>gml:_Geometry</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="IsCurve">
+            <fes:Returns xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:boolean</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="arg1">
+                  <fes:Type xmlns:gml32="http://www.opengis.net/gml/3.2">gml32:AbstractGeometry</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="IsPoint">
+            <fes:Returns xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:boolean</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="arg1">
+                  <fes:Type>gml:_Geometry</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="IsPoint">
+            <fes:Returns xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:boolean</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="arg1">
+                  <fes:Type xmlns:gml32="http://www.opengis.net/gml/3.2">gml32:AbstractGeometry</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="IsSurface">
+            <fes:Returns xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:boolean</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="arg1">
+                  <fes:Type>gml:_Geometry</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="IsSurface">
+            <fes:Returns xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:boolean</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="arg1">
+                  <fes:Type xmlns:gml32="http://www.opengis.net/gml/3.2">gml32:AbstractGeometry</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="Length">
+            <fes:Returns xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:double</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="arg1">
+                  <fes:Type>gml:_Geometry</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="Length">
+            <fes:Returns xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:double</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="arg1">
+                  <fes:Type xmlns:gml32="http://www.opengis.net/gml/3.2">gml32:AbstractGeometry</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="Lower">
+            <fes:Returns xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:integer</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="arg1">
+                  <fes:Type xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:double</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="MoveGeometry">
+            <fes:Returns xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:double</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="arg1">
+                  <fes:Type>gml:_Geometry</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="MoveGeometry">
+            <fes:Returns xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:double</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="arg1">
+                  <fes:Type xmlns:gml32="http://www.opengis.net/gml/3.2">gml32:AbstractGeometry</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="Upper">
+            <fes:Returns xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:integer</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="arg1">
+                  <fes:Type xmlns:xsd="http://www.w3.org/2001/XMLSchema">xsd:double</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+      </fes:Functions>
+   </fes:Filter_Capabilities>
+</WFS_Capabilities>]]></con:value></con:property><con:property><con:name>service</con:name><con:value>wfs</con:value></con:property><con:property><con:name>version</con:name><con:value>2.0.0</con:value></con:property><con:property><con:name>qaf.ShortDescription</con:name><con:value/></con:property><con:property><con:name>qaf.Author</con:name><con:value>herrmann</con:value></con:property><con:property><con:name>qaf.CreationDate</con:name><con:value>2014-01-13T12:24:44.124+01:00</con:value></con:property><con:property><con:name>qaf.Version</con:name><con:value>1.0.0</con:value></con:property><con:property><con:name>qaf.AssociatedRequirements</con:name><con:value/></con:property><con:property><con:name>qaf.ExpectedResults</con:name><con:value/></con:property><con:property><con:name>qaf.Status</con:name><con:value>IMPLEMENTED</con:value></con:property><con:property><con:name>qaf.LastUpdateDate</con:name><con:value>2014-01-13T14:10:42.863+01:00</con:value></con:property></con:properties><con:reportParameters/></con:testCase><con:setupScript/><con:reportParameters/></con:testSuite><con:testSuite name="Generator TestSuite 1" id="44474dec-0f80-4978-9d2f-c2897f98c59c"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Generator TestCase" searchProperties="true" id="b8fbb647-687a-493b-ada4-b1a4430df3f8"><con:description>The test case contains a test step with an assertion which will always fail</con:description><con:settings/><con:testStep type="calltestcase" name="Run TestCase"><con:settings/><con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:targetTestCase>d1a73552-7298-42a2-8e76-fdea21824580</con:targetTestCase><con:properties><con:property><con:name>capabilities</con:name></con:property><con:property><con:name>service</con:name></con:property><con:property><con:name>version</con:name></con:property><con:property><con:name>qaf.ShortDescription</con:name></con:property><con:property><con:name>qaf.Author</con:name></con:property><con:property><con:name>qaf.CreationDate</con:name></con:property><con:property><con:name>qaf.Version</con:name></con:property><con:property><con:name>qaf.AssociatedRequirements</con:name></con:property><con:property><con:name>qaf.ExpectedResults</con:name></con:property><con:property><con:name>qaf.Status</con:name></con:property><con:property><con:name>qaf.LastUpdateDate</con:name></con:property></con:properties><con:returnProperties/><con:runMode>PARALLELL</con:runMode></con:config></con:testStep><con:testStep type="groovy" name="Generator"><con:settings/><con:config><script>import de.interactive_instruments.xtf.SOAPUI_I;
+SOAPUI_I.init(log,context,testRunner);
+
+import de.interactive_instruments.xtf.ProjectHelper;
+import de.interactive_instruments.xtf.ProjModel;
+
+ProjectHelper ph = new ProjectHelper();
+
+for(int i=0; i&lt;5; i++) {
+	ph.generateStandaloneHttpRequest("HTTP Request TMPL",
+		new ProjModel(
+			testStep:"HTTP Request "+i
+	));
+}
+
+</script></con:config></con:testStep><con:testStep name="HTTP Request TMPL" type="httprequest" id="5a94dea7-1426-406f-a281-086977dec28f" disabled="true">
+        <con:settings/>
+        <con:config method="GET" name="HTTP Request TMPL" timeout="0" xsi:type="con:HttpRequest" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:description>This test step contains an assertion which will always fail</con:description><con:settings>
+            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+          </con:settings>
+          <con:encoding>UTF-8</con:encoding>
+          <con:endpoint>${#Project#serviceEndpoint}</con:endpoint>
+          <con:request/>
+          <con:assertion type="GroovyScriptAssertion" name="Script Assertion" id="bb92c7af-dd4d-4ac9-920a-1371176564b2"><con:configuration><scriptText>return 1;</scriptText></con:configuration></con:assertion><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+          <con:jmsPropertyConfig/>
+          <con:parameters>
+            
+            
+            
+          </con:parameters>
+        </con:config>
+      </con:testStep><con:properties><con:property><con:name>qaf.ShortDescription</con:name><con:value/></con:property><con:property><con:name>qaf.Author</con:name><con:value>herrmann</con:value></con:property><con:property><con:name>qaf.LastEditor</con:name><con:value>herrmann</con:value></con:property><con:property><con:name>qaf.ExpectedResults</con:name><con:value/></con:property><con:property><con:name>qaf.CreationDate</con:name><con:value>2014-02-08T17:49:37.481+01:00</con:value></con:property><con:property><con:name>qaf.LastUpdateDate</con:name><con:value>2014-02-08T17:49:37.481+01:00</con:value></con:property><con:property><con:name>qaf.Version</con:name><con:value>1.0.0</con:value></con:property><con:property><con:name>qaf.AssociatedRequirements</con:name><con:value>TR-V1</con:value></con:property><con:property><con:name>qaf.Status</con:name><con:value>IMPLEMENTED</con:value></con:property></con:properties></con:testCase><con:properties/></con:testSuite><con:properties><con:property><con:name>serviceEndpoint</con:name><con:value>http://nowhere</con:value></con:property><con:property><con:name>testIntensive</con:name><con:value/></con:property><con:property><con:name>authUser</con:name><con:value/></con:property><con:property><con:name>authPwd</con:name><con:value/></con:property><con:property><con:name>authMethod</con:name><con:value/></con:property></con:properties><con:wssContainer/><con:afterRunScript>import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
+import com.eviware.soapui.model.testsuite.TestStepResult;
+
+// Get the "requirements" test step
+def requirements = project.getTestSuiteByName("TestSetup")?.
+	getTestCaseByName("Requirements")?.getTestStepByName("Requirements");
+
+log.info("Results: ");
+for( testSuiteR in runner?.getResults() ) {
+	for( testCaseR in testSuiteR?.getResults() ) {
+		for( testStepR in testCaseR?.getResults() ) {
+
+			if(testStepR.getStatus()!=TestStepResult.TestStepStatus.OK) {
+				if (testStepR.testStep instanceof HttpTestRequestStep) {
+					testStepR.testStep.testRequest.assertionList.each{
+						// Extract ID which is seperated with a whitespace
+						String assertionName = it.name;
+						String id = assertionName?.substring( 0, assertionName.indexOf(" ") );
+						
+						if(it.valid) {
+							log.info("Assertion "+assertionName+" passed");
+						}else if(it.failed) {
+							log.error("Assertion "+assertionName+" failed with error:");
+							log.error("  -   "+it.getErrors()[0].getMessage());
+							log.error("  -   Requirements:");
+							
+							// Todo: Save the requirements as an object in a map
+							requirements.getPropertyList().each {
+								if(it.getName().contains(id)) {
+									log.error("   -   "+it.getName()+" :" );
+									log.error("        "+it.getValue());
+								}
+							}							
+						}else{
+							log.warn("Assertion "+assertionName+" is deactivated");
+						}
+					}
+				}
+			}
+		}
+	}
+}
+</con:afterRunScript><con:sensitiveInformation/></con:soapui-project>
