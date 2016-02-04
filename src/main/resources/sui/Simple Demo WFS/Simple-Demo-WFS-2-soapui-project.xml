@@ -1,0 +1,831 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~  Copyright 2016 interactive instruments GmbH
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  --><con:soapui-project activeEnvironment="etf-sel.modelBridge" name="Simple Demo WFS 2" resourceRoot="${projectDir}" soapui-version="4.6.4" abortOnError="false" runType="SEQUENTIAL" id="ddbe357a-af22-49ef-a988-934b161f9e24" xmlns:con="http://eviware.com/soapui/config"><con:description>This Testproject is used for testing the OWSGTL.</con:description><con:settings/><con:testSuite name="TestSetup" id="cf90340c-3505-419b-a22b-310ca90ff911">
+    <con:description>Request and parse the capabilities of the service and configure test cases. Requires the etf-sui-owsgtl test library.</con:description><con:settings>
+      <con:setting id="com.eviware.soapui.impl.wsdl.panels.testcase.JTestRunLog$OptionsForm@errors_only">true</con:setting>
+    </con:settings>
+    <con:runType>SEQUENTIAL</con:runType>
+    
+    <con:properties><con:property><con:name>version</con:name><con:value>2.0.0</con:value></con:property><con:property><con:name>service</con:name><con:value>wfs</con:value></con:property></con:properties>
+    
+  <con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Init TestProject" searchProperties="true" id="2f82092f-e0c4-4bd2-87d7-2237df89b426"><con:description>Initialize loggers and set credentials.</con:description><con:settings/><con:testStep name="Init TestProject" type="groovy" id="b739f7e6-831f-4cb1-8b88-3f9d4eadaf49">
+        <con:settings/>
+        <con:config><script>import de.interactive_instruments.xtf.*;
+SOAPUI_I.init(log,context,testRunner);
+
+TestSetup.init();
+</script></con:config>
+      </con:testStep><con:properties><con:property><con:name>qaf.ShortDescription</con:name><con:value/></con:property><con:property><con:name>qaf.Author</con:name><con:value>herrmann</con:value></con:property><con:property><con:name>qaf.CreationDate</con:name><con:value>2014-01-13T12:24:44.115+01:00</con:value></con:property><con:property><con:name>qaf.Version</con:name><con:value>1.0.0</con:value></con:property><con:property><con:name>qaf.AssociatedRequirements</con:name><con:value/></con:property><con:property><con:name>qaf.ExpectedResults</con:name><con:value/></con:property><con:property><con:name>qaf.Status</con:name><con:value>IMPLEMENTED</con:value></con:property><con:property><con:name>qaf.LastUpdateDate</con:name><con:value>2014-01-13T14:10:42.862+01:00</con:value></con:property></con:properties><con:reportParameters/></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Service is available" searchProperties="true" id="04a3cac8-39b9-435c-8bb7-acdd1b5486a5"><con:description>Check if the service is available.</con:description><con:settings/><con:testStep name="GetCapabilities" type="httprequest" id="6747659a-26f7-44ee-910c-022fb4bf1173">
+        <con:settings/>
+        <con:config method="GET" name="GetCapabilities" timeout="0" xsi:type="con:HttpRequest" sslKeystore="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:settings>
+            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+          <con:setting id="com.eviware.soapui.impl.support.AbstractHttpRequest@follow-redirects">true</con:setting><con:setting id="com.eviware.soapui.settings.CommonSettings@entitizeProperties">false</con:setting><con:setting id="com.eviware.soapui.impl.support.AbstractHttpRequest@dump-file"/><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@bind_address"/></con:settings>
+          <con:encoding>UTF-8</con:encoding>
+          <con:endpoint>${#Project#serviceEndpoint}</con:endpoint>
+          <con:request/>
+          <con:assertion type="Response SLA Assertion" name="Respond in 10 seconds" id="f4835519-c036-4bdb-a8fa-641c29d2c8ff"><con:configuration><SLA>10000</SLA></con:configuration></con:assertion><con:assertion type="XPath Match" name="Expect no HTML root element" id="fba8f343-cd90-4968-96b3-37f36bd6a864"><con:configuration><path>exists(/*:html)</path><content>false</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:assertion type="XPath Match" name="Expect Capabilities root element" id="74438b8c-ef10-4bf7-85ca-23e2544d0de3"><con:configuration><path>exists(/*:WFS_Capabilities) or exists(/*:WMT_MS_Capabilities) or exists(/*:WMS_Capabilities)</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:assertion type="OwsExceptionReportAssertion" name="OwsExceptionReportAssertion" id="befdb812-5725-403d-bc81-678b76c63f29"/><con:assertion type="Invalid HTTP Status Codes" name="Invalid HTTP Status Codes" id="c74169b2-9491-4fda-bd58-262b937cd1c3"><con:configuration><codes>403, 404, 500, 503</codes></con:configuration></con:assertion><con:assertion type="XPath Match" name="Expect Capabilites in requested version" id="5a66cca5-e4de-468e-9eff-5c37d6ae88ef"><con:configuration><path>/*/@version</path><content>${#TestSuite#version}</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+          <con:jmsPropertyConfig/>
+          <con:parameters>
+            
+            
+            <con:parameter>
+              <con:name>request</con:name>
+              <con:value>GetCapabilities</con:value>
+              <con:style>QUERY</con:style>
+              <con:type xmlns:xs="http://www.w3.org/2001/XMLSchema">xs:string</con:type>
+              <con:default>GetCapabilities</con:default>
+              <con:description xsi:nil="true"/>
+            </con:parameter>
+          <con:parameter><con:name>service</con:name><con:value>${#TestSuite#service}</con:value><con:style>QUERY</con:style></con:parameter><con:parameter><con:name>version</con:name><con:value>${#TestSuite#version}</con:value><con:style>QUERY</con:style></con:parameter></con:parameters>
+        </con:config>
+      </con:testStep><con:testStep type="transfer" name="Transfer Capabilities, service and version" id="95f8bb99-b864-4ccd-9266-75cac7e8deb2"><con:settings/><con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" useXQuery="false" entitize="false" transferChildNodes="false"><con:name>Capabilities</con:name><con:sourceType>ResponseAsXml</con:sourceType><con:sourceStep>GetCapabilities</con:sourceStep><con:targetType>capabilities</con:targetType><con:targetStep>#TestCase#</con:targetStep></con:transfers><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true"><con:name>service</con:name><con:sourceType>service</con:sourceType><con:sourceStep>#TestSuite#</con:sourceStep><con:targetType>service</con:targetType><con:targetStep>#TestCase#</con:targetStep></con:transfers><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true"><con:name>version</con:name><con:sourceType>version</con:sourceType><con:sourceStep>#TestSuite#</con:sourceStep><con:targetType>version</con:targetType><con:targetStep>#TestCase#</con:targetStep></con:transfers></con:config></con:testStep><con:testStep type="groovy" name="Stop on failure" id="ff194152-3ce4-43be-acc7-bf5e535be9f5"><con:settings/><con:config><script/></con:config></con:testStep><con:properties><con:property><con:name>capabilities</con:name><con:value><![CDATA[<wfs:WFS_Capabilities xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://services.interactive-instruments.de/cite2013wfs/simpledemo/schema/ogc/wfs/2.0/wfs.xsd" version="2.0.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <ows:ServiceIdentification>
+      <ows:Title>SimpleDemo WFS</ows:Title>
+      <ows:Abstract>SimpleDemo WFS by XtraServer</ows:Abstract>
+      <ows:Keywords>
+         <ows:Keyword>XtraServer Demo</ows:Keyword>
+         <ows:Keyword>WFS</ows:Keyword>
+         <ows:Keyword>SimpleDemo</ows:Keyword>
+      </ows:Keywords>
+      <ows:ServiceType>WFS</ows:ServiceType>
+      <ows:ServiceTypeVersion>1.0.0</ows:ServiceTypeVersion>
+      <ows:ServiceTypeVersion>1.1.0</ows:ServiceTypeVersion>
+      <ows:ServiceTypeVersion>2.0.0</ows:ServiceTypeVersion>
+      <ows:Fees>The use of this service is restricted. Please contact us.</ows:Fees>
+      <ows:AccessConstraints>The use of this service is restricted. Please contact us.</ows:AccessConstraints>
+   </ows:ServiceIdentification>
+   <ows:ServiceProvider>
+      <ows:ProviderName>interactive instruments GmbH</ows:ProviderName>
+      <ows:ProviderSite/>
+      <ows:ServiceContact>
+         <ows:IndividualName>XtraServer SimpleDemo Team</ows:IndividualName>
+         <ows:PositionName>Team</ows:PositionName>
+         <ows:ContactInfo>
+            <ows:Phone>
+               <ows:Voice>+49 228 9141070</ows:Voice>
+               <ows:Facsimile>+49 228 9141090</ows:Facsimile>
+            </ows:Phone>
+            <ows:Address>
+               <ows:City>Bonn</ows:City>
+               <ows:AdministrativeArea>NRW</ows:AdministrativeArea>
+               <ows:PostalCode>53115</ows:PostalCode>
+               <ows:Country>DE</ows:Country>
+               <ows:ElectronicMailAddress>xtraserver@interactive-instruments.de</ows:ElectronicMailAddress>
+            </ows:Address>
+            <ows:OnlineResource xlink:href="http://www.interactive-instruments.de"/>
+            <ows:HoursOfService>0900 - 1800 GMT+1, Mon - Fri</ows:HoursOfService>
+         </ows:ContactInfo>
+         <ows:Role>PointOfContact</ows:Role>
+      </ows:ServiceContact>
+   </ows:ServiceProvider>
+   <ows:OperationsMetadata>
+      <ows:Operation name="GetCapabilities">
+         <ows:DCP>
+            <ows:HTTP>
+               <ows:Get xlink:href="http://services.interactive-instruments.de/cite2013wfs/simpledemo/cgi-bin/cities-postgresql/wfs?"/>
+               <ows:Post xlink:href="http://services.interactive-instruments.de/cite2013wfs/simpledemo/cgi-bin/cities-postgresql/wfs"/>
+            </ows:HTTP>
+         </ows:DCP>
+         <ows:Parameter name="AcceptVersions">
+            <ows:AllowedValues>
+               <ows:Value>1.0.0</ows:Value>
+               <ows:Value>1.1.0</ows:Value>
+               <ows:Value>2.0.0</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+         <ows:Parameter name="AcceptFormats">
+            <ows:AllowedValues>
+               <ows:Value>text/xml</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+         <ows:Parameter name="Sections">
+            <ows:AllowedValues>
+               <ows:Value>ServiceIdentification</ows:Value>
+               <ows:Value>ServiceProvider</ows:Value>
+               <ows:Value>OperationsMetadata</ows:Value>
+               <ows:Value>FeatureTypeList</ows:Value>
+               <ows:Value>Filter_Capabilities</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+      </ows:Operation>
+      <ows:Operation name="DescribeFeatureType">
+         <ows:DCP>
+            <ows:HTTP>
+               <ows:Get xlink:href="http://services.interactive-instruments.de/cite2013wfs/simpledemo/cgi-bin/cities-postgresql/wfs?"/>
+               <ows:Post xlink:href="http://services.interactive-instruments.de/cite2013wfs/simpledemo/cgi-bin/cities-postgresql/wfs"/>
+            </ows:HTTP>
+         </ows:DCP>
+         <ows:Parameter name="outputFormat">
+            <ows:AllowedValues>
+               <ows:Value>text/xml; subtype=gml/2.1.2</ows:Value>
+               <ows:Value>application/gml+xml; version=2.1</ows:Value>
+               <ows:Value>text/xml; subtype=gml/3.1.1</ows:Value>
+               <ows:Value>application/gml+xml; version=3.1</ows:Value>
+               <ows:Value>text/xml; subtype=gml/3.2.1</ows:Value>
+               <ows:Value>application/gml+xml; version=3.2</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+      </ows:Operation>
+      <ows:Operation name="GetFeature">
+         <ows:DCP>
+            <ows:HTTP>
+               <ows:Get xlink:href="http://services.interactive-instruments.de/cite2013wfs/simpledemo/cgi-bin/cities-postgresql/wfs?"/>
+               <ows:Post xlink:href="http://services.interactive-instruments.de/cite2013wfs/simpledemo/cgi-bin/cities-postgresql/wfs"/>
+            </ows:HTTP>
+         </ows:DCP>
+         <ows:Parameter name="outputFormat">
+            <ows:AllowedValues>
+               <ows:Value>text/xml; subtype=gml/2.1.2</ows:Value>
+               <ows:Value>application/gml+xml; version=2.1</ows:Value>
+               <ows:Value>text/xml; subtype=gml/3.1.1</ows:Value>
+               <ows:Value>application/gml+xml; version=3.1</ows:Value>
+               <ows:Value>text/xml; subtype=gml/3.2.1</ows:Value>
+               <ows:Value>application/gml+xml; version=3.2</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+      </ows:Operation>
+      <ows:Operation name="GetPropertyValue">
+         <ows:DCP>
+            <ows:HTTP>
+               <ows:Get xlink:href="http://services.interactive-instruments.de/cite2013wfs/simpledemo/cgi-bin/cities-postgresql/wfs?"/>
+               <ows:Post xlink:href="http://services.interactive-instruments.de/cite2013wfs/simpledemo/cgi-bin/cities-postgresql/wfs"/>
+            </ows:HTTP>
+         </ows:DCP>
+         <ows:Parameter name="outputFormat">
+            <ows:AllowedValues>
+               <ows:Value>text/xml; subtype=gml/2.1.2</ows:Value>
+               <ows:Value>application/gml+xml; version=2.1</ows:Value>
+               <ows:Value>text/xml; subtype=gml/3.1.1</ows:Value>
+               <ows:Value>application/gml+xml; version=3.1</ows:Value>
+               <ows:Value>text/xml; subtype=gml/3.2.1</ows:Value>
+               <ows:Value>application/gml+xml; version=3.2</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+      </ows:Operation>
+      <ows:Operation name="ListStoredQueries">
+         <ows:DCP>
+            <ows:HTTP>
+               <ows:Get xlink:href="http://services.interactive-instruments.de/cite2013wfs/simpledemo/cgi-bin/cities-postgresql/wfs?"/>
+               <ows:Post xlink:href="http://services.interactive-instruments.de/cite2013wfs/simpledemo/cgi-bin/cities-postgresql/wfs"/>
+            </ows:HTTP>
+         </ows:DCP>
+      </ows:Operation>
+      <ows:Operation name="DescribeStoredQueries">
+         <ows:DCP>
+            <ows:HTTP>
+               <ows:Get xlink:href="http://services.interactive-instruments.de/cite2013wfs/simpledemo/cgi-bin/cities-postgresql/wfs?"/>
+               <ows:Post xlink:href="http://services.interactive-instruments.de/cite2013wfs/simpledemo/cgi-bin/cities-postgresql/wfs"/>
+            </ows:HTTP>
+         </ows:DCP>
+      </ows:Operation>
+      <ows:Parameter name="version">
+         <ows:AllowedValues>
+            <ows:Value>2.0.0</ows:Value>
+            <ows:Value>1.1.0</ows:Value>
+            <ows:Value>1.0.0</ows:Value>
+         </ows:AllowedValues>
+      </ows:Parameter>
+      <ows:Parameter name="srsName">
+         <ows:AllowedValues>
+            <ows:Value>urn:ogc:def:crs:EPSG::25833</ows:Value>
+            <ows:Value>urn:ogc:def:crs:EPSG::3034</ows:Value>
+            <ows:Value>urn:ogc:def:crs:EPSG::3857</ows:Value>
+            <ows:Value>urn:ogc:def:crs:EPSG::4258</ows:Value>
+            <ows:Value>urn:ogc:def:crs:EPSG::4326</ows:Value>
+         </ows:AllowedValues>
+      </ows:Parameter>
+      <ows:Constraint name="ImplementsSimpleWFS">
+         <ows:NoValues/>
+         <ows:DefaultValue>TRUE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="ImplementsBasicWFS">
+         <ows:NoValues/>
+         <ows:DefaultValue>TRUE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="ImplementsTransactionalWFS">
+         <ows:NoValues/>
+         <ows:DefaultValue>FALSE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="ImplementsLockingWFS">
+         <ows:NoValues/>
+         <ows:DefaultValue>FALSE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="KVPEncoding">
+         <ows:NoValues/>
+         <ows:DefaultValue>TRUE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="XMLEncoding">
+         <ows:NoValues/>
+         <ows:DefaultValue>TRUE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="SOAPEncoding">
+         <ows:NoValues/>
+         <ows:DefaultValue>TRUE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="ImplementsInheritance">
+         <ows:NoValues/>
+         <ows:DefaultValue>TRUE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="ImplementsRemoteResolve">
+         <ows:NoValues/>
+         <ows:DefaultValue>FALSE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="ImplementsResultPaging">
+         <ows:NoValues/>
+         <ows:DefaultValue>FALSE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="ImplementsStandardJoins">
+         <ows:NoValues/>
+         <ows:DefaultValue>FALSE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="ImplementsSpatialJoins">
+         <ows:NoValues/>
+         <ows:DefaultValue>FALSE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="ImplementsTemporalJoins">
+         <ows:NoValues/>
+         <ows:DefaultValue>FALSE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="ImplementsFeatureVersioning">
+         <ows:NoValues/>
+         <ows:DefaultValue>FALSE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="ManageStoredQueries">
+         <ows:NoValues/>
+         <ows:DefaultValue>FALSE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="AutomaticDataLocking">
+         <ows:NoValues/>
+         <ows:DefaultValue>TRUE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="PreservesSiblingOrder">
+         <ows:NoValues/>
+         <ows:DefaultValue>TRUE</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="ResolveLocalScope">
+         <ows:NoValues/>
+         <ows:DefaultValue>*</ows:DefaultValue>
+      </ows:Constraint>
+      <ows:Constraint name="QueryExpressions">
+         <ows:AllowedValues>
+            <ows:Value>wfs:Query</ows:Value>
+            <ows:Value>wfs:StoredQuery</ows:Value>
+         </ows:AllowedValues>
+      </ows:Constraint>
+   </ows:OperationsMetadata>
+   <wfs:FeatureTypeList>
+      <wfs:FeatureType xmlns:ci="http://www.interactive-instruments.de/namespaces/demo/cities/4.0/cities">
+         <wfs:Name>ci:City</wfs:Name>
+         <wfs:Title/>
+         <wfs:DefaultCRS>urn:ogc:def:crs:EPSG::4326</wfs:DefaultCRS>
+         <wfs:OtherCRS>urn:ogc:def:crs:EPSG::25833</wfs:OtherCRS>
+         <wfs:OtherCRS>urn:ogc:def:crs:EPSG::3034</wfs:OtherCRS>
+         <wfs:OtherCRS>urn:ogc:def:crs:EPSG::3857</wfs:OtherCRS>
+         <wfs:OtherCRS>urn:ogc:def:crs:EPSG::4258</wfs:OtherCRS>
+         <ows:WGS84BoundingBox>
+            <ows:LowerCorner>5 46</ows:LowerCorner>
+            <ows:UpperCorner>16 54</ows:UpperCorner>
+         </ows:WGS84BoundingBox>
+      </wfs:FeatureType>
+      <wfs:FeatureType xmlns:ci="http://www.interactive-instruments.de/namespaces/demo/cities/4.0/cities">
+         <wfs:Name>ci:District</wfs:Name>
+         <wfs:Title/>
+         <wfs:DefaultCRS>urn:ogc:def:crs:EPSG::4326</wfs:DefaultCRS>
+         <wfs:OtherCRS>urn:ogc:def:crs:EPSG::25833</wfs:OtherCRS>
+         <wfs:OtherCRS>urn:ogc:def:crs:EPSG::3034</wfs:OtherCRS>
+         <wfs:OtherCRS>urn:ogc:def:crs:EPSG::3857</wfs:OtherCRS>
+         <wfs:OtherCRS>urn:ogc:def:crs:EPSG::4258</wfs:OtherCRS>
+         <ows:WGS84BoundingBox>
+            <ows:LowerCorner>5 46</ows:LowerCorner>
+            <ows:UpperCorner>16 54</ows:UpperCorner>
+         </ows:WGS84BoundingBox>
+      </wfs:FeatureType>
+      <wfs:FeatureType xmlns:ci="http://www.interactive-instruments.de/namespaces/demo/cities/4.0/cities">
+         <wfs:Name>ci:River</wfs:Name>
+         <wfs:Title/>
+         <wfs:DefaultCRS>urn:ogc:def:crs:EPSG::4326</wfs:DefaultCRS>
+         <wfs:OtherCRS>urn:ogc:def:crs:EPSG::25833</wfs:OtherCRS>
+         <wfs:OtherCRS>urn:ogc:def:crs:EPSG::3034</wfs:OtherCRS>
+         <wfs:OtherCRS>urn:ogc:def:crs:EPSG::3857</wfs:OtherCRS>
+         <wfs:OtherCRS>urn:ogc:def:crs:EPSG::4258</wfs:OtherCRS>
+         <ows:WGS84BoundingBox>
+            <ows:LowerCorner>5 46</ows:LowerCorner>
+            <ows:UpperCorner>16 54</ows:UpperCorner>
+         </ows:WGS84BoundingBox>
+      </wfs:FeatureType>
+      <wfs:FeatureType xmlns:ci="http://www.interactive-instruments.de/namespaces/demo/cities/4.0/cities">
+         <wfs:Name>ci:State</wfs:Name>
+         <wfs:Title/>
+         <wfs:DefaultCRS>urn:ogc:def:crs:EPSG::4326</wfs:DefaultCRS>
+         <wfs:OtherCRS>urn:ogc:def:crs:EPSG::25833</wfs:OtherCRS>
+         <wfs:OtherCRS>urn:ogc:def:crs:EPSG::3034</wfs:OtherCRS>
+         <wfs:OtherCRS>urn:ogc:def:crs:EPSG::3857</wfs:OtherCRS>
+         <wfs:OtherCRS>urn:ogc:def:crs:EPSG::4258</wfs:OtherCRS>
+         <ows:WGS84BoundingBox>
+            <ows:LowerCorner>5 46</ows:LowerCorner>
+            <ows:UpperCorner>16 54</ows:UpperCorner>
+         </ows:WGS84BoundingBox>
+      </wfs:FeatureType>
+   </wfs:FeatureTypeList>
+   <fes:Filter_Capabilities>
+      <fes:Conformance>
+         <fes:Constraint name="ImplementsQuery">
+            <ows:NoValues/>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsAdHocQuery">
+            <ows:NoValues/>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsFunctions">
+            <ows:NoValues/>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsResourceId">
+            <ows:NoValues/>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsMinStandardFilter">
+            <ows:NoValues/>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsStandardFilter">
+            <ows:NoValues/>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsMinSpatialFilter">
+            <ows:NoValues/>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsSpatialFilter">
+            <ows:NoValues/>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsMinTemporalFilter">
+            <ows:NoValues/>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsTemporalFilter">
+            <ows:NoValues/>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsVersionNav">
+            <ows:NoValues/>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsSorting">
+            <ows:NoValues/>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsExtendedOperators">
+            <ows:NoValues/>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsMinimumXPath">
+            <ows:NoValues/>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+         </fes:Constraint>
+         <fes:Constraint name="ImplementsSchemaElementFunc">
+            <ows:NoValues/>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+         </fes:Constraint>
+      </fes:Conformance>
+      <fes:Id_Capabilities>
+         <fes:ResourceIdentifier name="fes:ResourceId"/>
+      </fes:Id_Capabilities>
+      <fes:Scalar_Capabilities>
+         <fes:LogicalOperators/>
+         <fes:ComparisonOperators>
+            <fes:ComparisonOperator name="PropertyIsEqualTo"/>
+            <fes:ComparisonOperator name="PropertyIsNotEqualTo"/>
+            <fes:ComparisonOperator name="PropertyIsLessThan"/>
+            <fes:ComparisonOperator name="PropertyIsGreaterThan"/>
+            <fes:ComparisonOperator name="PropertyIsLessThanOrEqualTo"/>
+            <fes:ComparisonOperator name="PropertyIsGreaterThanOrEqualTo"/>
+            <fes:ComparisonOperator name="PropertyIsLike"/>
+            <fes:ComparisonOperator name="PropertyIsNull"/>
+            <fes:ComparisonOperator name="PropertyIsNil"/>
+            <fes:ComparisonOperator name="PropertyIsBetween"/>
+         </fes:ComparisonOperators>
+      </fes:Scalar_Capabilities>
+      <fes:Spatial_Capabilities>
+         <fes:GeometryOperands>
+            <fes:GeometryOperand name="gml:Point"/>
+            <fes:GeometryOperand name="gml:MultiPoint"/>
+            <fes:GeometryOperand name="gml:LineString"/>
+            <fes:GeometryOperand name="gml:Arc"/>
+            <fes:GeometryOperand name="gml:CubicSpline"/>
+            <fes:GeometryOperand name="gml:MultiLineString"/>
+            <fes:GeometryOperand name="gml:Curve"/>
+            <fes:GeometryOperand name="gml:MultiCurve"/>
+            <fes:GeometryOperand name="gml:Polygon"/>
+            <fes:GeometryOperand name="gml:MultiSurface"/>
+            <fes:GeometryOperand name="gml:Box"/>
+            <fes:GeometryOperand name="gml:Envelope"/>
+         </fes:GeometryOperands>
+         <fes:SpatialOperators>
+            <fes:SpatialOperator name="BBOX"/>
+            <fes:SpatialOperator name="Equals"/>
+            <fes:SpatialOperator name="Disjoint"/>
+            <fes:SpatialOperator name="Intersects"/>
+            <fes:SpatialOperator name="Touches"/>
+            <fes:SpatialOperator name="Crosses"/>
+            <fes:SpatialOperator name="Within"/>
+            <fes:SpatialOperator name="Contains"/>
+            <fes:SpatialOperator name="Overlaps"/>
+            <fes:SpatialOperator name="Beyond"/>
+            <fes:SpatialOperator name="DWithin"/>
+         </fes:SpatialOperators>
+      </fes:Spatial_Capabilities>
+      <fes:Temporal_Capabilities>
+         <fes:TemporalOperands>
+            <fes:TemporalOperand name="gml:TimeInstant"/>
+            <fes:TemporalOperand name="gml:TimePeriod"/>
+         </fes:TemporalOperands>
+         <fes:TemporalOperators>
+            <fes:TemporalOperator name="During"/>
+         </fes:TemporalOperators>
+      </fes:Temporal_Capabilities>
+      <fes:Functions>
+         <fes:Function name="modulo">
+            <fes:Returns>xsd:integer</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="dividend">
+                  <fes:Type>xsd:double</fes:Type>
+               </fes:Argument>
+               <fes:Argument name="divisor">
+                  <fes:Type>xsd:double</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="mod">
+            <fes:Returns>xsd:integer</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="dividend">
+                  <fes:Type>xsd:double</fes:Type>
+               </fes:Argument>
+               <fes:Argument name="divisor">
+                  <fes:Type>xsd:double</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="abs">
+            <fes:Returns>xsd:integer</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="value">
+                  <fes:Type>xsd:double</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="concatenate">
+            <fes:Returns>xsd:string</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="value1">
+                  <fes:Type>xsd:string</fes:Type>
+               </fes:Argument>
+               <fes:Argument name="value2">
+                  <fes:Type>xsd:string</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="geodim">
+            <fes:Returns>xsd:integer</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="value">
+                  <fes:Type>gml:AbstractGeometryType</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="geoArea">
+            <fes:Returns>xsd:integer</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="value">
+                  <fes:Type>gml:AbstractGeometryType</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+         <fes:Function name="geoLength">
+            <fes:Returns>xsd:integer</fes:Returns>
+            <fes:Arguments>
+               <fes:Argument name="value">
+                  <fes:Type>gml:AbstractGeometryType</fes:Type>
+               </fes:Argument>
+            </fes:Arguments>
+         </fes:Function>
+      </fes:Functions>
+   </fes:Filter_Capabilities>
+</wfs:WFS_Capabilities>]]></con:value></con:property><con:property><con:name>service</con:name><con:value>wfs</con:value></con:property><con:property><con:name>version</con:name><con:value>2.0.0</con:value></con:property><con:property><con:name>qaf.ShortDescription</con:name><con:value/></con:property><con:property><con:name>qaf.Author</con:name><con:value>herrmann</con:value></con:property><con:property><con:name>qaf.CreationDate</con:name><con:value>2014-01-13T12:24:44.124+01:00</con:value></con:property><con:property><con:name>qaf.Version</con:name><con:value>1.0.0</con:value></con:property><con:property><con:name>qaf.AssociatedRequirements</con:name><con:value/></con:property><con:property><con:name>qaf.ExpectedResults</con:name><con:value/></con:property><con:property><con:name>qaf.Status</con:name><con:value>IMPLEMENTED</con:value></con:property><con:property><con:name>qaf.LastUpdateDate</con:name><con:value>2014-01-13T14:10:42.863+01:00</con:value></con:property></con:properties><con:reportParameters/></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="GetCapabilities is schema valid" searchProperties="true" id="f33ba8c6-baa3-4f71-8d57-072a0797e286" disabled="true"><con:description>Validate Capabilites response.</con:description><con:settings/><con:testStep name="GetCapabilities" type="httprequest" id="0a78b85c-f24c-4fad-a924-a2d066059e34">
+        <con:settings/>
+        <con:config method="GET" name="GetCapabilities" timeout="0" xsi:type="con:HttpRequest" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:settings>
+            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+          </con:settings>
+          <con:encoding>UTF-8</con:encoding>
+          <con:endpoint>${#Project#serviceEndpoint}</con:endpoint>
+          <con:request/>
+          <con:assertion type="Simple Schema Validator" name="Validates against schemaLocation" id="7239a318-4ac5-45a1-b5e8-d2fdcc4e972b"><con:configuration><pathToXSD>xsi:schemaLocation</pathToXSD></con:configuration></con:assertion><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+          <con:jmsPropertyConfig/>
+          <con:parameters>
+            
+            
+            <con:parameter>
+              <con:name>request</con:name>
+              <con:value>GetCapabilities</con:value>
+              <con:style>QUERY</con:style>
+              <con:type xmlns:xs="http://www.w3.org/2001/XMLSchema">xs:string</con:type>
+              <con:default>GetCapabilities</con:default>
+              <con:description xsi:nil="true"/>
+            </con:parameter>
+          <con:parameter><con:name>version</con:name><con:value>${#TestSuite#version}</con:value><con:style>QUERY</con:style></con:parameter><con:parameter><con:name>service</con:name><con:value>${#TestSuite#service}</con:value><con:style>QUERY</con:style></con:parameter></con:parameters>
+        </con:config>
+      </con:testStep><con:properties><con:property><con:name>qaf.ShortDescription</con:name><con:value/></con:property><con:property><con:name>qaf.Author</con:name><con:value>herrmann</con:value></con:property><con:property><con:name>qaf.CreationDate</con:name><con:value>2014-01-13T12:24:44.127+01:00</con:value></con:property><con:property><con:name>qaf.Version</con:name><con:value>1.0.0</con:value></con:property><con:property><con:name>qaf.AssociatedRequirements</con:name><con:value/></con:property><con:property><con:name>qaf.ExpectedResults</con:name><con:value/></con:property><con:property><con:name>qaf.Status</con:name><con:value>IMPLEMENTED</con:value></con:property><con:property><con:name>qaf.LastUpdateDate</con:name><con:value>2014-01-13T14:10:42.864+01:00</con:value></con:property></con:properties><con:reportParameters/></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Operation endpoints are available" searchProperties="true" id="882b47ea-6320-4059-b9e1-48051acead8c" disabled="true"><con:description>Check if the endpoints from the Capabilites are accesable..</con:description><con:settings/><con:testStep type="properties" name="Transfer_Properties" id="18145cd9-aa87-4252-afb4-305fa86ff1ec"><con:settings/><con:config xsi:type="con:PropertiesStep" saveFirst="true" discardValuesOnSave="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:properties><con:property><con:name>featureTypeName</con:name><con:value xsi:nil="true"/></con:property><con:property><con:name>outputFormat</con:name><con:value xsi:nil="true"/></con:property></con:properties></con:config></con:testStep><con:testStep name="GetCapabilities" type="httprequest" id="6f1ecac6-4a11-482d-bc4a-6f71ee89385a">
+        <con:settings/>
+        <con:config method="GET" name="GetCapabilities" timeout="0" xsi:type="con:HttpRequest" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:settings>
+            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+          </con:settings>
+          <con:encoding>UTF-8</con:encoding>
+          <con:endpoint>${#Project#serviceEndpoint}</con:endpoint>
+          <con:request/>
+          <con:assertion type="Response SLA Assertion" name="Respond in 10 seconds" id="f4835519-c036-4bdb-a8fa-641c29d2c8ff"><con:configuration><SLA>10000</SLA></con:configuration></con:assertion><con:assertion type="XPath Match" name="Expect no HTML root element" id="fba8f343-cd90-4968-96b3-37f36bd6a864"><con:configuration><path>exists(/*:html)</path><content>false</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreOrder>false</ignoreOrder><acceptValidXPath>false</acceptValidXPath></con:configuration></con:assertion><con:assertion type="XPath Match" name="Expect Capabilities root element" id="a0d642fa-9690-4a3b-a9e1-7f168ba84ee8"><con:configuration><path>exists(/*:WFS_Capabilities) or exists(/*:WMT_MS_Capabilities) or exists(/*:WMS_Capabilities)</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreOrder>false</ignoreOrder><acceptValidXPath>false</acceptValidXPath></con:configuration></con:assertion><con:assertion type="OwsExceptionReportAssertion" name="OwsExceptionReportAssertion" id="086f89d1-d2f6-42a7-a206-2b290bfbbe22"/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+          <con:jmsPropertyConfig/>
+          <con:parameters>
+            
+            
+            <con:parameter>
+              <con:name>request</con:name>
+              <con:value>GetCapabilities</con:value>
+              <con:style>QUERY</con:style>
+              <con:type xmlns:xs="http://www.w3.org/2001/XMLSchema">xs:string</con:type>
+              <con:default>GetCapabilities</con:default>
+              <con:description xsi:nil="true"/>
+            </con:parameter>
+          <con:parameter><con:name>service</con:name><con:value>${#TestSuite#service}</con:value><con:style>QUERY</con:style></con:parameter><con:parameter><con:name>version</con:name><con:value>${#TestSuite#version}</con:value><con:style>QUERY</con:style></con:parameter></con:parameters>
+        </con:config>
+      </con:testStep><con:testStep type="transfer" name="Select one FeatureType" id="9f9e58de-7115-4aca-a024-b891b031f7a8"><con:settings/><con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transfers setNullOnMissingSource="false" transferTextContent="true" failOnError="false" ignoreEmpty="false" transferToAll="false" useXQuery="false" entitize="false" transferChildNodes="false"><con:name>Extract name of FeatureType</con:name><con:sourceType>ResponseAsXml</con:sourceType><con:sourceStep>GetCapabilities</con:sourceStep><con:sourcePath>//*:FeatureType[1]/*:Name</con:sourcePath><con:targetType>featureTypeName</con:targetType><con:targetStep>Transfer_Properties</con:targetStep></con:transfers><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" transferToAll="false" transferChildNodes="false" useXQuery="true" ignoreEmpty="false" entitize="false"><con:name>Extract OutputFormat of FeatureType</con:name><con:sourceType>ResponseAsXml</con:sourceType><con:sourceStep>GetCapabilities</con:sourceStep><con:sourcePath>if (exists(//*:FeatureType[1]/*:OutputFormats/*:Format))
+then //*:FeatureType[1]/*:OutputFormats/*:Format
+else  /*:WFS_Capabilities/*:OperationsMetadata/*:Operation[@name='GetFeature']/*:Parameter[@name='outputFormat']/*:AllowedValues/*:Value</con:sourcePath><con:targetType>outputFormat</con:targetType><con:targetStep>Transfer_Properties</con:targetStep></con:transfers></con:config></con:testStep><con:testStep type="groovy" name="Activate Operations" id="bda71ddd-a220-42c4-b766-5130adc83295"><con:settings/><con:config><script>import de.interactive_instruments.xtf.*;
+SOAPUI_I.init(log,context,testRunner);
+import com.eviware.soapui.support.XmlHolder;
+
+def ph = new ProjectHelper();
+
+def testStepNames = ['GetFeature', 'DescribeFeatureType', 'GetMap', 'GetFeatureInfo'];
+ph.disableTestSteps(testStepNames);
+
+XmlHolder capResp = ph.getTestStepResult("GetCapabilities");
+
+for(operation in testStepNames) {
+	String endpt=Util.getOnlineResourceForOperation(capResp, operation);
+	if(endpt!=null) {
+		ph.activateTestSteps([operation]);
+		Util.setProjectProperty(testRunner, "endpt."+operation, endpt);
+	}
+}
+</script></con:config></con:testStep><con:testStep type="httprequest" name="GetFeature" id="3a3f34c0-b5af-4f4e-948a-92c3aa2ea832"><con:settings/><con:config method="GET" xsi:type="con:HttpRequest" name="GetFeature" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>${#Project#endpt.GetFeature}</con:endpoint><con:request/><con:assertion type="XPath Match" name="Root element is FeatureCollection" id="b7be47fb-1c9a-4675-bfb1-18cd2bad4b27"><con:configuration><path>exists(/*:FeatureCollection)</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreOrder>false</ignoreOrder><acceptValidXPath>false</acceptValidXPath></con:configuration></con:assertion><con:assertion type="OwsExceptionReportAssertion" name="OwsExceptionReportAssertion" id="0045a266-6fee-4b74-bcab-ad5c0ea54d2b"/><con:assertion type="Invalid HTTP Status Codes" name="Invalid HTTP Status Codes" id="95146f31-741c-433a-a8f9-e984b5fe8b8c"><con:configuration><codes>403, 404, 500, 503</codes></con:configuration></con:assertion><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><con:parameter><con:name>SERVICE</con:name><con:value>${#TestSuite#service}</con:value><con:style>QUERY</con:style></con:parameter><con:parameter><con:name>VERSION</con:name><con:value>${#TestSuite#version}</con:value><con:style>QUERY</con:style></con:parameter><con:parameter><con:name>REQUEST</con:name><con:value>GetFeature</con:value><con:style>QUERY</con:style></con:parameter><con:parameter><con:name>RESULTTYPE</con:name><con:value>hits</con:value><con:style>QUERY</con:style></con:parameter><con:parameter><con:name>TYPENAMES</con:name><con:value>${Transfer_Properties#featureTypeName}</con:value><con:style>QUERY</con:style></con:parameter><con:parameter><con:name>COUNT</con:name><con:value>1</con:value><con:style>QUERY</con:style></con:parameter><con:parameter><con:name>OUTPUTFORMAT</con:name><con:value>${Transfer_Properties#outputFormat}</con:value><con:style>QUERY</con:style></con:parameter></con:parameters></con:config></con:testStep><con:testStep type="httprequest" name="DescribeFeatureType" id="2cd1985a-039e-43d6-88a1-dac6d46c50f8"><con:settings/><con:config method="GET" xsi:type="con:HttpRequest" name="DescribeFeatureType" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>${#Project#endpt.GetFeature}</con:endpoint><con:request/><con:assertion type="XPath Match" name="Root element is Schema" id="a113f39f-81f2-4467-be8d-dd1892780f82"><con:configuration><path>exists(/*:schema)</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreOrder>false</ignoreOrder><acceptValidXPath>false</acceptValidXPath></con:configuration></con:assertion><con:assertion type="OwsExceptionReportAssertion" name="OwsExceptionReportAssertion" id="db8b4839-cfcd-462d-8c7b-661d9fbb8983"/><con:assertion type="Invalid HTTP Status Codes" name="Invalid HTTP Status Codes" id="a0fac5c6-b798-45ce-8669-dfb6c1fb866d"><con:configuration><codes>403, 404, 500, 503</codes></con:configuration></con:assertion><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><con:parameter><con:name>service</con:name><con:value>${#TestSuite#service}</con:value><con:style>QUERY</con:style></con:parameter><con:parameter><con:name>version</con:name><con:value>${#TestSuite#version}</con:value><con:style>QUERY</con:style></con:parameter><con:parameter><con:name>request</con:name><con:value>DescribeFeatureType</con:value><con:style>QUERY</con:style></con:parameter><con:parameter><con:name>outputFormat</con:name><con:value>${Transfer_Properties#outputFormat}</con:value><con:style>QUERY</con:style></con:parameter></con:parameters></con:config></con:testStep><con:testStep type="httprequest" name="GetMap" disabled="true" id="93d8b9fe-1744-40c7-8b79-a61a94b801c9"><con:settings/><con:config method="GET" xsi:type="con:HttpRequest" name="GetMap" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>${#Project#endpt.GetMap}</con:endpoint><con:request/><con:assertion type="Invalid HTTP Status Codes" name="Invalid HTTP Status Codes" id="832e69d1-07bf-49dd-89a4-26c0365a4c31"><con:configuration><codes>403, 404, 500, 503</codes></con:configuration></con:assertion><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:config></con:testStep><con:testStep type="httprequest" name="GetFeatureInfo" disabled="true" id="2309e2b7-fb8f-471b-8d41-70737da286a6"><con:settings/><con:config method="GET" xsi:type="con:HttpRequest" name="GetFeatureInfo" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>${#Project#endpt.GetFeatureInfo}</con:endpoint><con:request/><con:assertion type="Invalid HTTP Status Codes" name="Invalid HTTP Status Codes" id="1c79f946-b8e2-4e08-a6d9-f1dcaeeeae66"><con:configuration><codes>403, 404, 500, 503</codes></con:configuration></con:assertion><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:config></con:testStep><con:properties><con:property><con:name>qaf.ShortDescription</con:name><con:value/></con:property><con:property><con:name>qaf.Author</con:name><con:value>herrmann</con:value></con:property><con:property><con:name>qaf.CreationDate</con:name><con:value>2014-01-13T12:24:44.130+01:00</con:value></con:property><con:property><con:name>qaf.Version</con:name><con:value>1.0.0</con:value></con:property><con:property><con:name>qaf.AssociatedRequirements</con:name><con:value/></con:property><con:property><con:name>qaf.ExpectedResults</con:name><con:value/></con:property><con:property><con:name>qaf.Status</con:name><con:value>IMPLEMENTED</con:value></con:property><con:property><con:name>qaf.LastUpdateDate</con:name><con:value>2014-01-13T14:10:42.866+01:00</con:value></con:property></con:properties><con:reportParameters/></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="AutoConfigure WFS" searchProperties="true" id="8ff6f821-db0c-4177-ba60-6c45731d24d0" disabled="true">
+      <con:description>Parse DescribeFeatureType responses and check the number of available Features.</con:description><con:settings/>
+      
+      
+      
+      <con:properties><con:property><con:name>qaf.ShortDescription</con:name><con:value/></con:property><con:property><con:name>qaf.Author</con:name><con:value>herrmann</con:value></con:property><con:property><con:name>qaf.CreationDate</con:name><con:value>2014-01-13T12:24:44.129+01:00</con:value></con:property><con:property><con:name>qaf.Version</con:name><con:value>1.0.0</con:value></con:property><con:property><con:name>qaf.AssociatedRequirements</con:name><con:value/></con:property><con:property><con:name>qaf.ExpectedResults</con:name><con:value/></con:property><con:property><con:name>qaf.Status</con:name><con:value>IMPLEMENTED</con:value></con:property><con:property><con:name>qaf.LastUpdateDate</con:name><con:value>2014-01-13T14:10:42.865+01:00</con:value></con:property></con:properties>
+      <con:testStep type="properties" name="Transfer_Properties" id="ad3a8a6e-60b1-499f-bfa6-ef4ddcd1649d"><con:settings/><con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:properties><con:property><con:name>featureTypeName</con:name><con:value>ci:City</con:value></con:property><con:property><con:name>version</con:name><con:value>2.0.0</con:value></con:property><con:property><con:name>outputFormat</con:name><con:value>text/xml; subtype=gml/3.2.1</con:value></con:property><con:property><con:name>FT.NAMESPACES.X</con:name><con:value xsi:nil="true"/></con:property><con:property><con:name>FT.NAMESPACES.GET</con:name><con:value xsi:nil="true"/></con:property><con:property><con:name>FT.PROPERTY.NAME</con:name><con:value xsi:nil="true"/></con:property><con:property><con:name>FT.NAME</con:name><con:value xsi:nil="true"/></con:property><con:property><con:name>FT.PREFIX</con:name><con:value xsi:nil="true"/></con:property><con:property><con:name>FT.NAMESPACE</con:name><con:value/></con:property><con:property><con:name>FT.NAMESPACES</con:name><con:value xsi:nil="true"/></con:property><con:property><con:name>featureTypeNamespaceWfs2</con:name><con:value>xmlns(ci,http://www.interactive-instruments.de/namespaces/demo/cities/4.0/cities)</con:value></con:property></con:properties></con:config></con:testStep>
+    <con:testStep name="GetCapabilities" type="httprequest" id="1bbb694d-5b41-4331-a191-023489bdae85">
+        <con:settings/>
+        <con:config method="GET" name="GetCapabilities" timeout="0" xsi:type="con:HttpRequest" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:settings>
+            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+          </con:settings>
+          <con:encoding>UTF-8</con:encoding>
+          <con:endpoint>${#Project#serviceEndpoint}</con:endpoint>
+          <con:request/>
+          <con:assertion type="XPath Match" name="No Exception or HTML" id="fae048da-089d-4063-beac-c90253dec802"><con:configuration><path>exists(/*:ServiceExceptionReport) or exists(/*:html)</path><content>false</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:assertion type="Simple Schema Validator" name="Simple Schema Validator" id="1d2ddae3-f797-486d-b889-33e7d4686448"><con:configuration><pathToXSD>xsi:schemaLocation</pathToXSD></con:configuration></con:assertion><con:assertion type="OwsExceptionReportAssertion" name="OwsExceptionReportAssertion" id="29e5ab9e-3605-460d-bb8c-a91b5e5808f1"/><con:assertion type="XPath Match" name="Root element is WFS_Capabilities" id="96a027de-f87c-4326-924e-b3e4ab2e4666"><con:configuration><path>exists(/*:WFS_Capabilities)</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:assertion type="GroovyScriptAssertion" name="Script Assertion" id="a810d0ff-efb7-49c9-b147-168a237203dd"><con:configuration><scriptText>import com.eviware.soapui.support.XmlHolder
+
+def holder = new XmlHolder(messageExchange.responseContentAsXml) 
+
+
+
+public class OutputFormat {
+
+	private String outputFormat;
+	private FormatType type;
+
+	public OutputFormat() { }
+	
+	public OutputFormat(String outputFormat) {
+		
+		log.info(outputFormat);
+		
+		this.outputFormat = outputFormat;
+		this.type = FormatType.UNKNOWN; 
+		
+		if(outputFormat.indexOf("xml")!=-1 || 
+			outputFormat.indexOf("gml")!=-1)
+		{
+			type=FormatType.XML;
+		}else if(outputFormat.indexOf("json")!=-1) {
+			type=FormatType.JSON;
+		}else if(outputFormat.indexOf("text")!=-1) {
+			type=FormatType.TEXT;
+		}
+	}
+	
+	public boolean equals(OutputFormat outputFormat) {
+		return this.getFormat().equals(outputFormat.getFormat());
+	}
+	
+	public String toString() {
+		return this.outputFormat;
+	}
+	
+	public String getFormat() {
+		return this.outputFormat;
+	}
+	
+	public boolean isParsable() {
+		// JSON is parsable as XML in SoapUI
+		return (type==FormatType.XML || FormatType.JSON);
+	}
+	
+	public boolean isText() {
+		return (type==FORMAT.TEXT);
+	}
+	
+}
+
+enum FormatType { UNKNOWN, TEXT, XML, JSON, IMAGE };
+
+
+
+
+
+TreeMap&lt;String, OutputFormat[]> outputFormats = new TreeMap&lt;String, OutputFormat[]>();
+String serviceTypeVersion;
+
+void initOutputFormats(final XmlHolder capabilitiesXML) {
+		
+	final String operationNameXPath=
+		"/*:WFS_Capabilities/*:OperationsMetadata/*:Operation/@name";
+
+	serviceTypeVersion = capabilitiesXML.getNodeValue("/*:WFS_Capabilities/@version");	
+
+	
+	for(operationName in capabilitiesXML.getNodeValues(operationNameXPath) ) {
+			
+			try {
+				final List&lt;String> allOutputFormats = 
+					getOperationParameterValues(capabilitiesXML, 
+						operationName, "outputFormat");
+				log.info("Output: "+allOutputFormats);
+				final List&lt;OutputFormat> ofList = new ArrayList&lt;OutputFormat>();
+				for(String o in allOutputFormats.sort()) {
+					ofList.add(new OutputFormat(o));
+				}
+				outputFormats.put(operationName, ofList.toArray(new OutputFormat[0]));
+			}catch(Exception e){
+				//Operation does not Provide an outputFormat
+				log.info("Exc: "+operationName);
+			}
+	}
+}
+
+	String[] getOperationParameterValues(final XmlHolder capabilitiesXML, 
+		final String operation, 
+		final String parameter)
+	{
+	    
+		final String operationXPath=
+			"/*:WFS_Capabilities/*:OperationsMetadata/*:Operation[@name=\""+
+			operation+"\"]";
+		
+		String allowedValue="";
+		if(serviceTypeVersion=="2.0.0")
+			allowedValue = "/*:AllowedValues";
+		final String owsValueXPath="/*:Parameter[@name=\""+parameter+"\"]"+
+			allowedValue+"/*:Value";
+
+		String[] values = capabilitiesXML.getNodeValues(operationXPath+owsValueXPath);
+		log.info(operationXPath+owsValueXPath)
+		
+		if(values.size()==0) {
+			throw new Exception(this, "Unable to find \""+operation+"\"");
+		}
+		return values;
+	}
+
+initOutputFormats(holder);
+</scriptText></con:configuration></con:assertion><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+          <con:jmsPropertyConfig/>
+          <con:parameters>
+            
+            
+            <con:parameter>
+              <con:name>request</con:name>
+              <con:value>GetCapabilities</con:value>
+              <con:style>QUERY</con:style>
+              <con:type xmlns:xs="http://www.w3.org/2001/XMLSchema">xs:string</con:type>
+              <con:default>GetCapabilities</con:default>
+              <con:description xsi:nil="true"/>
+            </con:parameter>
+          <con:parameter><con:name>service</con:name><con:value>${#TestSuite#service}</con:value><con:style>QUERY</con:style></con:parameter><con:parameter><con:name>version</con:name><con:value>${#TestSuite#version}</con:value><con:style>QUERY</con:style></con:parameter></con:parameters>
+        </con:config>
+      </con:testStep><con:testStep name="Analyze WFS Capabilities" type="groovy" id="767ae337-791d-4fe6-8639-ce35259e54c8">
+        <con:settings/>
+        <con:config><script>import de.interactive_instruments.xtf.*;
+import de.interactive_instruments.xtf.wfs.*;
+SOAPUI_I.init(log,context,testRunner);
+
+def ph = new ProjectHelper();
+def cap = new Capabilities();
+
+cap.setCapabilities(ph.getTestStepResult('GetCapabilities'));
+new ObjectSaver().save(cap);
+</script></con:config>
+      </con:testStep><con:testStep type="httprequest" name="Get Schema Definition" disabled="true" id="20fa3fd4-8dac-4fb4-8dc8-da6a513abeb7"><con:settings/><con:config method="GET" xsi:type="con:HttpRequest" name="Get Schema Definition" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>${#Project#endpt.DescribeFeatureType}</con:endpoint><con:request/><con:assertion type="XPath Match" name="Root element is Schema" id="a113f39f-81f2-4467-be8d-dd1892780f82"><con:configuration><path>exists(/*:schema)</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreOrder>false</ignoreOrder><acceptValidXPath>false</acceptValidXPath></con:configuration></con:assertion><con:assertion type="XPath Match" name="Expect no Exception" id="bb17ff5e-a967-4df7-a6ac-94b35c53e453"><con:configuration><path>exists(/*:ServiceExceptionReport) or (/*:ExceptionReport)</path><content>false</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreOrder>false</ignoreOrder><acceptValidXPath>false</acceptValidXPath></con:configuration></con:assertion><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><con:parameter><con:name>service</con:name><con:value>${#TestSuite#service}</con:value><con:style>QUERY</con:style></con:parameter><con:parameter><con:name>version</con:name><con:value>${#TestSuite#version}</con:value><con:style>QUERY</con:style></con:parameter><con:parameter><con:name>request</con:name><con:value>DescribeFeatureType</con:value><con:style>QUERY</con:style></con:parameter><con:parameter><con:name>outputFormat</con:name><con:value>${Transfer_Properties#outputFormat}</con:value><con:style>QUERY</con:style></con:parameter></con:parameters></con:config></con:testStep><con:testStep type="httprequest" name="Get number of Features in DB" disabled="true" id="a786abc9-0a69-4acf-b432-4943cd749c03"><con:settings/><con:config method="GET" xsi:type="con:HttpRequest" name="Get number of Features in DB" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>${#Project#endpt.GetFeature}</con:endpoint><con:request/><con:assertion type="XPath Match" name="Root element is FeatureCollection" id="7caba3f1-af14-42dc-83f7-abb28b7927ac"><con:configuration><path>exists(/*:FeatureCollection)</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreOrder>false</ignoreOrder><acceptValidXPath>false</acceptValidXPath></con:configuration></con:assertion><con:assertion type="XPath Match" name="Expect no Exception" id="2b311676-82bb-48e9-b655-c7ae550565e6"><con:configuration><path>exists(/*:ServiceExceptionReport) or (/*:ExceptionReport)</path><content>false</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreOrder>false</ignoreOrder><acceptValidXPath>false</acceptValidXPath></con:configuration></con:assertion><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><con:parameter><con:name>service</con:name><con:value>${#TestSuite#service}</con:value><con:style>QUERY</con:style></con:parameter><con:parameter><con:name>version</con:name><con:value>${#TestSuite#version}</con:value><con:style>QUERY</con:style></con:parameter><con:parameter><con:name>request</con:name><con:value>GetFeature</con:value><con:style>QUERY</con:style></con:parameter><con:parameter><con:name>resultType</con:name><con:value>hits</con:value><con:style>QUERY</con:style></con:parameter><con:parameter><con:name>TYPENAMES</con:name><con:value>${Transfer_Properties#featureTypeName}</con:value><con:style>QUERY</con:style></con:parameter><con:parameter><con:name>outputFormat</con:name><con:value>${Transfer_Properties#outputFormat}</con:value><con:style>QUERY</con:style></con:parameter></con:parameters></con:config></con:testStep><con:reportParameters/></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="ObjectSaver" searchProperties="true" disabled="true" id="f2fd9d80-0092-427c-ade5-7502b677d876">
+      <con:description>Dieser Testfall wird lediglich für die Persistierung von XTF-OWSGTL Objekten genutzt und ist deaktiviert.</con:description><con:settings/>
+      
+    <con:testStep type="properties" name="TransientObjects" id="fa990936-3f16-408f-b7b4-64c7c9b5f3d2"><con:description>This test step stores objects that can be accessed via the de.interactive_instruments.ObjectSaver class.</con:description><con:settings/><con:config xsi:type="con:PropertiesStep" saveFirst="true" discardValuesOnSave="true" createMissingOnLoad="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:properties><con:property><con:name>de.interactive_instruments.xtf.wfs.Capabilities</con:name><con:value xsi:nil="true"/></con:property></con:properties></con:config></con:testStep><con:testStep type="properties" name="PersistentObjects" id="0aca2586-883a-41b5-a13b-928c9c3667e5"><con:description>This test step stores objects that can be accessed via the de.interactive_instruments.ObjectSaver class.</con:description><con:settings/><con:config xsi:type="con:PropertiesStep" saveFirst="true" discardValuesOnSave="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:properties/></con:config></con:testStep><con:properties><con:property><con:name>qaf.ShortDescription</con:name><con:value/></con:property><con:property><con:name>qaf.Author</con:name><con:value>herrmann</con:value></con:property><con:property><con:name>qaf.CreationDate</con:name><con:value>2014-01-13T12:24:44.132+01:00</con:value></con:property><con:property><con:name>qaf.Version</con:name><con:value>1.0.0</con:value></con:property><con:property><con:name>qaf.AssociatedRequirements</con:name><con:value/></con:property><con:property><con:name>qaf.ExpectedResults</con:name><con:value/></con:property><con:property><con:name>qaf.Status</con:name><con:value>IMPLEMENTED</con:value></con:property><con:property><con:name>qaf.LastUpdateDate</con:name><con:value>2014-01-13T14:10:42.868+01:00</con:value></con:property></con:properties><con:reportParameters/></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Requirements" searchProperties="true" id="63cd0be1-0d04-46da-b39f-6e16232dc74b" disabled="true"><con:description>Load Requirements file.</con:description><con:settings/><con:testStep type="groovy" name="Requirements" disabled="true" id="b2133a8c-28ee-4ffe-90c5-ae323b70ee0f"><con:settings/><con:config><script>// Load Requierments properties
+
+def projectroot = context.expand('${projectDir}')
+
+File file = new File(projectroot+"\\ReferenceRequirements.txt")
+
+def testCase = testRunner.testCase
+
+// Delete all properties
+/*testCase.propertyNames.each { name ->
+	testCase.removeProperty name
+}*/
+
+// Load properties from file
+testCase.addPropertiesFromFile(file.path)</script></con:config></con:testStep><con:properties><con:property><con:name>qaf.ShortDescription</con:name><con:value/></con:property><con:property><con:name>qaf.Author</con:name><con:value>herrmann</con:value></con:property><con:property><con:name>qaf.CreationDate</con:name><con:value>2014-01-13T12:24:44.133+01:00</con:value></con:property><con:property><con:name>qaf.Version</con:name><con:value>1.0.0</con:value></con:property><con:property><con:name>qaf.AssociatedRequirements</con:name><con:value/></con:property><con:property><con:name>qaf.ExpectedResults</con:name><con:value/></con:property><con:property><con:name>qaf.Status</con:name><con:value>IMPLEMENTED</con:value></con:property><con:property><con:name>qaf.LastUpdateDate</con:name><con:value>2014-01-13T14:10:42.868+01:00</con:value></con:property></con:properties></con:testCase><con:setupScript/><con:reportParameters/></con:testSuite><con:testSuite name="TS 2" id="842c9461-460c-4095-9fef-4512b1f155c1"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="TestCase 2.1" searchProperties="true" id="2aaceb3b-d00e-488f-8ce7-558c24ba7a69"><con:settings/><con:testStep type="groovy" name="Groovy Script" id="0bd3fe12-b462-4e48-aace-097a2821b3ec"><con:settings/><con:config><script>log.info 'Hello!'</script></con:config></con:testStep><con:testStep type="httprequest" name="2.1 HTTP Test Request" id="17c5fd13-aabe-43a7-9483-0881edff4b7d"><con:settings/><con:config method="GET" xsi:type="con:HttpRequest" name="2.1 HTTP Test Request" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>${#Project#serviceEndpoint}</con:endpoint><con:request/><con:assertion type="Invalid HTTP Status Codes" name="Invalid HTTP Status Codes"><con:configuration><codes>404 503</codes></con:configuration></con:assertion><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:config></con:testStep><con:properties/></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="TestCase 2.2" searchProperties="true" id="50d0a884-09d4-4b58-a3e5-c229afd025ab"><con:settings/><con:testStep type="calltestcase" name="Run TestCase" id="4c8f6cde-df8e-4a71-935e-4457baa20079"><con:settings/><con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:targetTestCase>2aaceb3b-d00e-488f-8ce7-558c24ba7a69</con:targetTestCase><con:properties/><con:returnProperties/><con:runMode>PARALLELL</con:runMode></con:config></con:testStep><con:testStep type="httprequest" name="2.2 HTTP Test Request" id="a782caa4-9a95-4224-93be-cb956e03cb61"><con:settings/><con:config method="GET" xsi:type="con:HttpRequest" name="2.2 HTTP Test Request" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:endpoint/><con:request/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:testSuite name="TS 3" id="6a442e55-a116-4964-beeb-0f42ebb02eec"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="TestCase 3.1" searchProperties="true" id="4ecbe714-d77d-4789-a889-d95bbe45a806"><con:settings/><con:testStep type="calltestcase" name="Run TestCase" id="fce72f26-e033-46af-b3e2-bf3f2fa50111"><con:settings/><con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:targetTestCase>50d0a884-09d4-4b58-a3e5-c229afd025ab</con:targetTestCase><con:properties/><con:returnProperties/><con:runMode>PARALLELL</con:runMode></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:testSuite name="TS 4" id="b1d8e42c-ba62-4203-a704-bbac266484dd"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="TestCase 4.1" searchProperties="true" id="74b17c2b-f260-4de8-94d5-3c1a204e7e59"><con:settings/><con:testStep type="groovy" name="Groovy Script" id="7c7e8a82-a5e0-4281-8c45-19bedf106ad4"><con:settings/><con:config><script>import de.interactive_instruments.xtf.*;
+SOAPUI_I.init(log,context,testRunner);
+
+def ph = new ProjectHelper();
+
+def testStepNames = ['HTTP Test Request TMPL'];
+ph.disableTestSteps(testStepNames);
+
+for(i in 1..4) {
+	log.info 'i: '+i
+	ph.generateStandaloneHttpRequest('HTTP Test Request TMPL', 
+		new ProjModel(
+			testStep:"HTTP Request "+i
+	))
+}
+</script></con:config></con:testStep><con:testStep type="httprequest" name="HTTP Test Request TMPL" disabled="true" id="5f217b26-3dc4-4d83-a996-2694fed9b986"><con:settings/><con:config method="GET" xsi:type="con:HttpRequest" name="HTTP Test Request TMPL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>${#Project#serviceEndpoint}</con:endpoint><con:request/><con:assertion type="Invalid HTTP Status Codes" name="Invalid HTTP Status Codes"><con:configuration><codes>404 503</codes></con:configuration></con:assertion><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:properties><con:property><con:name>serviceEndpoint</con:name><con:value>http://services.interactive-instruments.de/cite2013wfs/simpledemo/cgi-bin/cities-postgresql/wfs?request=GetCapabilities&amp;service=wfs</con:value></con:property><con:property><con:name>testIntensive</con:name><con:value/></con:property><con:property><con:name>authUser</con:name><con:value/></con:property><con:property><con:name>authPwd</con:name><con:value/></con:property><con:property><con:name>authMethod</con:name><con:value/></con:property><con:property><con:name>endpt.GetFeature</con:name><con:value>http://services.interactive-instruments.de/cite2013wfs/simpledemo/cgi-bin/cities-postgresql/wfs?</con:value></con:property><con:property><con:name>endpt.DescribeFeatureType</con:name><con:value>http://services.interactive-instruments.de/cite2013wfs/simpledemo/cgi-bin/cities-postgresql/wfs?</con:value></con:property></con:properties><con:wssContainer/><con:oAuth2ProfileContainer/><con:afterRunScript>import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
+import com.eviware.soapui.model.testsuite.TestStepResult;
+
+// Get the "requirements" test step
+def requirements = project.getTestSuiteByName("TestSetup")?.
+	getTestCaseByName("Requirements")?.getTestStepByName("Requirements");
+
+log.info("Results: ");
+for( testSuiteR in runner?.getResults() ) {
+	for( testCaseR in testSuiteR?.getResults() ) {
+		for( testStepR in testCaseR?.getResults() ) {
+
+			if(testStepR.getStatus()!=TestStepResult.TestStepStatus.OK) {
+				if (testStepR.testStep instanceof HttpTestRequestStep) {
+					testStepR.testStep.testRequest.assertionList.each{
+						// Extract ID which is seperated with a whitespace
+						String assertionName = it.name;
+						String id = assertionName?.substring( 0, assertionName.indexOf(" ") );
+						
+						if(it.valid) {
+							log.info("Assertion "+assertionName+" passed");
+						}else if(it.failed) {
+							log.error("Assertion "+assertionName+" failed with error:");
+							log.error("  -   "+it.getErrors()[0].getMessage());
+							log.error("  -   Requirements:");
+							
+							// Todo: Save the requirements as an object in a map
+							requirements.getPropertyList().each {
+								if(it.getName().contains(id)) {
+									log.error("   -   "+it.getName()+" :" );
+									log.error("        "+it.getValue());
+								}
+							}							
+						}else{
+							log.warn("Assertion "+assertionName+" is deactivated");
+						}
+					}
+				}
+			}
+		}
+	}
+}
+</con:afterRunScript><con:sensitiveInformation/></con:soapui-project>
