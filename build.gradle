@@ -11,15 +11,9 @@ buildscript {
                 username 'ii-bda'
                 password '6ozhS683'
             }}
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-        jcenter()
     }
     dependencies {
-        classpath group: 'de.interactive_instruments.bda', name: 'etf-bda', version:'1.0.+'
-        classpath 'net.researchgate:gradle-release:2.3.4'
-        classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.12.1"
+        classpath group: 'de.interactive_instruments.bda', name: 'etf-bda', version:'1.0.22'
     }
     dependencies {
         ant.unjar src: configurations.classpath.files.find {it.path.contains('etf')}, dest: 'build/gradle'
@@ -42,4 +36,5 @@ repositories {
 
 dependencies {
     compile group: 'by.stub', name: 'stubby4j', version:'3.3.0'
+    compile group: 'org.slf4j', name: 'slf4j-api', version: etf_slf4jApiVersion
 }
